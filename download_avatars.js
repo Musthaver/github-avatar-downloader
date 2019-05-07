@@ -20,17 +20,7 @@ function getRepoContributors(repoOwner, repoName, cb) {
   });
 }
 
-var getImageURLs = function(Array) {
-  var login = "";
-  var url = "";
-  fs.mkdirSync("./avatars"); //make the avatar director within the current directory
-
-  for (i = 0; i < Array.length; i++) {
-    login = "./avatars/" + Array[i].login + ".jpg";
-    url = Array[i].avatar_url;
-    downloadImageByURL(url, login);
-  }
-};
+// var getImageURLs = 
 
 function downloadImageByURL(url, filePath) {
   request.get(url)
@@ -41,5 +31,15 @@ if (!owner || !repo) {
   console.log("please provide the repo owner and the repo name");
   process.exit();
 } else {
-  getRepoContributors(owner, repo, getImageURLs);
+  getRepoContributors(owner, repo, function(Array) {
+    var login = "";
+    var url = "";
+    fs.mkdirSync("./avatars"); //make the avatar director within the current directory
+  
+    for (i = 0; i < Array.length; i++) {
+      login = "./avatars/" + Array[i].login + ".jpg";
+      url = Array[i].avatar_url;
+      downloadImageByURL(url, login);
+    }
+  });
 }
